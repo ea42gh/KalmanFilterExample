@@ -75,7 +75,7 @@ class Const2DVelocitySensor(object):
         x,y,t_x,t_y = zip( *[self.step_and_sense() for _ in range(n)])
         return DataFrame( { 'x' : x, 'y' : y, 'x.true' : t_x, 'y.true' : t_y } )
 # =================================================================================
-class PConst1DVelocitySensor(object):
+class PseudoConst1DVelocitySensor(object):
     ''' Simulate an object moving at almost constant velocity
         TODO: velocity is currently a random walk - replace with smooth noise....
     '''
@@ -105,11 +105,11 @@ class PConst1DVelocitySensor(object):
         x,t_x,xDot = zip( *[self.step_and_sense() for _ in range(n)])
         return DataFrame( { 'x' : x, 'xDot' : xDot, 'x.true' : t_x } )
 # ---------------------------------------------------------------------------------
-class PConst2DVelocitySensor(object):
+class PseudoConst2DVelocitySensor(object):
     ''' Simulate an object moving at constant velocity - TODO smooth_noise'''
     def __init__(self, x=(0,0), v=(1,0), dt=0.1, v_std=0., noise_std=1.):
-        self.x_sensor = PConst1DVelocitySensor( x=x[0], v=v[0], dt=dt, v_std=v_std, noise_std=noise_std )
-        self.y_sensor = PConst1DVelocitySensor( x=x[1], v=v[1], dt=dt, v_std=v_std, noise_std=noise_std )
+        self.x_sensor = PseudoConst1DVelocitySensor( x=x[0], v=v[0], dt=dt, v_std=v_std, noise_std=noise_std )
+        self.y_sensor = PseudoConst1DVelocitySensor( x=x[1], v=v[1], dt=dt, v_std=v_std, noise_std=noise_std )
 
     def step(self):
         x,xv = self.x_sensor.step()
@@ -195,7 +195,7 @@ class Const2DAccelerationSensor(object):
                             'xDot.true' : t_xDot, 'yDot.true' : t_yDot
                             } )
 # =================================================================================
-class PConst1DAccelerationSensor(object):
+class PseudoConst1DAccelerationSensor(object):
     ''' Simulate an object moving at almost constant acceleration '''
     def __init__(self, x=0, v=0, a=0, dt=0.1, x_noise_std=1., v_noise_std=1., a_std=0. ):
         self.x           = float(x)
@@ -232,11 +232,11 @@ class PConst1DAccelerationSensor(object):
         x,xDot,t_x,t_v,a = zip( *[self.step_and_sense() for _ in range(n)])
         return DataFrame( { 'x' : x, 'xDot' : xDot, 'x.true' : t_x, 'xDot.true' : t_v, 'a' : a } )
 # ---------------------------------------------------------------------------------
-class PConst2DAccelerationSensor(object):
+class PseudoConst2DAccelerationSensor(object):
     ''' Simulate an object moving at constant acceleration'''
     def __init__(self, x=(0,0), v=(1,0), a=(1,0), dt=0.1, x_noise_std=1., v_noise_std=0., a_std=0. ):
-        self.x_sensor = PConst1DAccelerationSensor( x=x[0], v=v[0], a=a[0], dt=dt, x_noise_std=x_noise_std, v_noise_std=v_noise_std, a_std=a_std )
-        self.y_sensor = PConst1DAccelerationSensor( x=x[1], v=v[1], a=a[1], dt=dt, x_noise_std=x_noise_std, v_noise_std=v_noise_std, a_std=a_std )
+        self.x_sensor = PseudoConst1DAccelerationSensor( x=x[0], v=v[0], a=a[0], dt=dt, x_noise_std=x_noise_std, v_noise_std=v_noise_std, a_std=a_std )
+        self.y_sensor = PseudoConst1DAccelerationSensor( x=x[1], v=v[1], a=a[1], dt=dt, x_noise_std=x_noise_std, v_noise_std=v_noise_std, a_std=a_std )
 
     def step(self):
         x,xv,xa = self.x_sensor.step()
