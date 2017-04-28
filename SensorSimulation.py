@@ -1,3 +1,5 @@
+# See https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python
+# =================================================================================
 from numpy import sin,pi
 from numpy.random import randn
 from numpy import array,sin
