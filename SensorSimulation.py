@@ -1,5 +1,6 @@
+from numpy import sin,pi
 from numpy.random import randn
-from numpy import array
+from numpy import array,sin
 from pandas import DataFrame
 from noise import pnoise1
 # =================================================================================
@@ -261,3 +262,32 @@ class PseudoConst2DAccelerationSensor(object):
                             'xDot.true' : t_xv, 'yDot.true' : t_yv,
                             'ax'        :   xa, 'ay'        :   ya
                            } )
+# =================================================================================
+class Sinusoidal1DSensor(object):
+    ''' Simulate an object moving at constant angular velocity'''
+    def __init__(self, phase=0, x0=0, amplitude=1., dt=0.1, freq=1., noise_std=1.):
+        self.amplitude = amplitude
+        self.phase     = float(phase)
+        self.noise_std = float(noise_std)
+        self.dt        = float(dt)
+        self.dtheta    = 2. * pi * freq * self.dt
+        self.x0        = x0;
+        self.x         = x0 + amplitude*sin(phase)
+
+    def step(self):
+        self.phase += self.dtheta
+        self.x      = self.x0+self.amplitude*sin( self.phase )
+        return self.x
+
+    def sense(self):
+        return self.x + randn() * self.noise_std
+
+    def step_and_sense(self):
+        self.phase += self.dtheta
+        self.x      = self.x0 + self.amplitude*sin( self.phase )
+        return ( self.x + randn() * self.noise_std, self.x )
+
+    def step_and_track(self, n):
+        x,t_x = zip( *[self.step_and_sense() for _ in range(n)])
+        return DataFrame( { 'x' : x, 'x.true' : t_x } )
+
